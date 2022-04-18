@@ -1,0 +1,98 @@
+@charset "UTF-8";
+
+/* http://meyerweb.com/eric/tools/css/reset/
+  v2.0 | 20110126
+  License: none (public domain)
+*/
+/* reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: none;
+}
+/* layout */
+html{font-size:16px;}
+body{position:relative;font-family:'Noto Sans KR', 'NotoSansCJKsc', sans-serif;font-weight:400;color:#333;letter-spacing:-0.025rem;/* iOS 특정 텍스트 확대 문제 해결 */-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;overflow-x:hidden;}
+
+.wrap{position:relative;height:100vh;}
+.header-wrap{padding:40px 0;background:#eaeaea;box-sizing:border-box;}
+.header-wrap h1{font-size:45px;line-height:50px;color:#333;font-weight:600;text-align:center;}
+.container{position:relative;margin:0 auto;max-width:1920px;height:calc(100% - 350px);text-align:center;}
+.off .container{height:auto;}
+.footer-wrap{position:fixed;bottom:0;padding:20px 0;width:100%;background:#eaeaea;box-sizing:border-box;}
+.off .footer-wrap{position:static;}
+.footer-wrap .copyright{margin:0 auto;max-width:1920px;font-size:14px;line-height:20px;color:#888;font-weight:200;text-align:center;}
+
+/* game background */
+.game{position:absolute;top:50%;left:50%;padding:50px 0;transform:translate(-50%, -50%);}
+.off .game{display:inline-block;position:relative;top:unset;left:unset;margin:0 auto;transform:unset;}
+.snakeTable{margin:0 auto;border-top:1px solid #000;border-left:1px solid #000;}
+.snakeTable div{display:table;table-layout:fixed;min-width:425px;}
+.snakeTable div span{display:table-cell;width:25px;height:25px;border-right:1px solid #000;border-bottom:1px solid #000;box-sizing:border-box;}
+.snakeTable div:nth-of-type(2n-1) span:nth-of-type(2n){background:#f3f3f3;}
+.snakeTable div:nth-of-type(2n) span:nth-of-type(2n-1){background:#f3f3f3;}
+
+.snakeTable div span.snake{position:relative;background:#25f608! important;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
+
+/* controller */
+.controller{padding:40px 0;text-align:center;}
+.btn-play{display:inline-block;padding:15px 0;width:100%;max-width:250px;min-height:50px;border-radius:20px;background:#f3f3f3;font-size:30px;line-height:50px;color:#000;}
+
+@media screen and (max-width: 768px) {
+  /* layout */
+  html{font-size:14px;}
+  .header-wrap{padding:10px;}
+  .header-wrap h1{font-size:25px;}
+  .container{height:calc(100% - 280px);}
+  .footer-wrap{padding:10px;}
+
+  /* game background */
+  .game{padding:20px 0;}
+  .snakeTable div{min-width:255px;}
+  .snakeTable div span{width:15px;height:15px;}
+
+  /* controller */
+  .controller{padding:50px 0;}
+  .btn-play{min-height:40px;font-size:22px;line-height:40px;}
+}
