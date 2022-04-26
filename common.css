@@ -74,6 +74,7 @@ body{position:relative;font-family:'Noto Sans KR', 'NotoSansCJKsc', sans-serif;f
 .snakeTable div:nth-of-type(2n) span:nth-of-type(2n-1){background:#f3f3f3;}
 
 .snakeTable div span.snake{position:relative;background:#25f608! important;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
+.snakeTable div span.apple{position:relative;background:#fa050d! important;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}
 
 /* controller */
 .controller{padding:40px 0;text-align:center;}

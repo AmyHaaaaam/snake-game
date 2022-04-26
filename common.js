@@ -78,19 +78,13 @@ function contentHeightSet() {
 // snake 
 var snake = new Array();
 
-//food 
-
-var food = new Array();
+//apple 
+var apple = new Array();
 
 // init snake 
 function initSnake() {
-  var x = '';
-  var y = '';
-
-  x = generateRandom(0,mapSize-1);
-  y = generateRandom(0,mapSize-1);
   snake = [];
-  snake.push([x, y]);
+  snake.push([0, 0]);
   drawSnake();
 }
 
@@ -106,6 +100,32 @@ function drawSnake() {
     var bgRow = document.querySelector('#bg-row'+snake[i][0]+'_'+snake[i][1]);
     bgRow.classList.add("snake");
 
+  }
+}
+
+// init apple 
+function initApple() {
+  var x = '';
+  var y = '';
+
+  x = generateRandom(0,mapSize-1);
+  y = generateRandom(0,mapSize-1);
+  apple = [];
+  apple.push([x, y]);
+  drawApple();
+}
+
+// draw apple
+function drawApple() {
+  // 움직일 때 기존 애플 픽셀 지우기 위한 소스
+  var block = document.querySelectorAll('.apple');
+  if(block.length > 0) {
+    block[0].classList.remove("apple");
+  }
+
+  for(var i=0; i<apple.length; i++) {
+    var bgRow = document.querySelector('#bg-row'+apple[i][0]+'_'+apple[i][1]);
+    bgRow.classList.add("apple");
   }
 }
 
@@ -191,6 +211,7 @@ function initAll() {
   initMap(); // 맵 초기화
   //initFood(); // 먹이 초기화
   initSnake(); // init snake
+  initApple(); // init apple
   LR = 0; // 좌우 방향 초기화
   TB = 1; // 위아래 방향 초기화
 }
