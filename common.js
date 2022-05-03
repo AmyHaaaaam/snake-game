@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function(){
   window.onresize = function() {
     contentHeightSet();
   };
+  document.querySelector('.btn-play').addEventListener('click', start);
 });
   
 document.addEventListener('keydown', keyDownHandler, false);
@@ -77,7 +78,7 @@ function contentHeightSet() {
 
 // snake 
 var snake = new Array();
-
+var prevSnake = new Array();
 //apple 
 var apple = new Array();
 
@@ -90,6 +91,7 @@ function initSnake() {
 
 // draw snake
 function drawSnake() {
+  state = '';
   // 움직일 때 기존 스네이크 픽셀 지우기 위한 소스
   var block = document.querySelectorAll('.snake');
   if(block.length > 0) {
@@ -99,20 +101,35 @@ function drawSnake() {
   for(var i=0; i<snake.length; i++) {
     var bgRow = document.querySelector('#bg-row'+snake[i][0]+'_'+snake[i][1]);
     bgRow.classList.add("snake");
-
+    if(bgRow.classList.contains('apple')) {
+      score++;
+      initApple();
+      state = 'eat';
+    }
   }
+  return state;
 }
 
 // init apple 
 function initApple() {
+  var snakeP = new Array(); //현재 스네이크의 위치를 배열에 담아 새로 생성될 애플의 위치에서 제외
+  snakeP[0] = snake[0][0];
+  snakeP[1] = snake[0][1];
+
   var x = '';
   var y = '';
 
-  x = generateRandom(0,mapSize-1);
+  x = generateRandom(0,mapSize-1); //난수생성 
   y = generateRandom(0,mapSize-1);
-  apple = [];
-  apple.push([x, y]);
-  drawApple();
+
+  if (x == snakeP[0] && y == snakeP[1]) { //현재 스네이크의 위치와 같다면
+    x = generateRandom(0,mapSize-1); //난수생성 
+    y = generateRandom(0,mapSize-1);
+  } else {
+    apple = [];
+    apple.push([x, y]);
+    drawApple();
+  }
 }
 
 // draw apple
@@ -129,43 +146,29 @@ function drawApple() {
   }
 }
 
-// 뱀 움직이기
-function left() {
-  LR = -1;
-  TB = 0;
-}
-function right() {
-  LR = 1;
-  TB = 0;
-}
-function up() {
-  LR = 0;
-  TB = -1;
-}
-function down() {
-  LR = 0;
-  TB = 1;
-}
-
 function keyDownHandler(event) {
-  if(event.keyCode == 39) {
-      rightPressed = true;
-      right();
+  if(event.keyCode == 39) { //right
+      rightPressed = true; 
+      LR = 1;
+      TB = 0;
       move();
   }
-  else if(event.keyCode == 37) {
+  else if(event.keyCode == 37) { //left
       leftPressed = true;
-      left();
+      LR = -1;
+      TB = 0;
       move();
   }
-  if(event.keyCode == 40) {
+  if(event.keyCode == 40) { //down
     downPressed = true;
-    down();
+    LR = 0;
+    TB = 1;
     move();
   }
-  else if(event.keyCode == 38) {
+  else if(event.keyCode == 38) { //up
     upPressed = true;
-    up();
+    LR = 0;
+    TB = -1;
     move();
   }
 }
@@ -187,6 +190,7 @@ function move() {
       head[0] = x;
   }else {
       alert('벽입니다.');
+      end();
       initAll();
       return;
   }
@@ -197,19 +201,32 @@ function move() {
     head[1] = y;
   } else {
     alert('벽입니다.');
+    end();
     initAll();
     return;
   }
-  snake = [];
-  snake.push([x, y]);
-  drawSnake();
+  snake.unshift(head);
+  if(state == 'eat') {
+    //initApple();
+    //snake.push([x, y]);
+    drawSnake();
+  } else {
+    snake.pop();
+    drawSnake();
+  }
 }
 
+function start() {
+  gameInterval = setInterval(move, 1000);
+}
+
+function end() {
+  clearInterval(gameInterval);
+}
 // 초기화
 function initAll() {
   score = 0; // 점수 초기화
   initMap(); // 맵 초기화
-  //initFood(); // 먹이 초기화
   initSnake(); // init snake
   initApple(); // init apple
   LR = 0; // 좌우 방향 초기화
