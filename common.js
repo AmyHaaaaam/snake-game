@@ -13,6 +13,24 @@ document.addEventListener("DOMContentLoaded", function(){
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
+// 헤더 푸터 콘텐츠 크기 
+function contentHeightSet() {
+	var windowH = window.innerHeight;
+  var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.footer-wrap').offsetHeight + document.querySelector('.controller').offsetHeight;
+  var gameBox = document.querySelector('.game');
+  var innerBoxH = gameBox.offsetHeight;
+  var wrap = document.querySelector('.wrap');
+
+  if(restH + innerBoxH > windowH) { //콘텐츠 + 헤더 + 푸터 높이가 브라우저 크기보다 넓어질 때
+    wrap.classList.add("off");
+  } else { 
+    if(!wrap.classList.contains('off')){
+      return;
+    }
+    wrap.classList.remove("off");
+  } 
+}
+
 // 난수 생성 함수 
 function generateRandom (min, max) {
   var ranNum = Math.floor(Math.random()*(max-min+1)) + min;
@@ -58,24 +76,6 @@ function initMap() {
   snakeBg.innerHTML = snakeBg.innerHTML + tableCode;
 }
 
-// 헤더 푸터 콘텐츠 크기 
-function contentHeightSet() {
-	var windowH = window.innerHeight;
-  var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.footer-wrap').offsetHeight + document.querySelector('.controller').offsetHeight;
-  var gameBox = document.querySelector('.game');
-  var innerBoxH = gameBox.offsetHeight;
-  var wrap = document.querySelector('.wrap');
-
-  if(restH + innerBoxH > windowH) { //콘텐츠 + 헤더 + 푸터 높이가 브라우저 크기보다 넓어질 때
-    wrap.classList.add("off");
-  } else { 
-    if(!wrap.classList.contains('off')){
-      return;
-    }
-    wrap.classList.remove("off");
-  } 
-}
-
 // snake 
 var snake = new Array();
 var prevSnake = new Array();
@@ -101,10 +101,10 @@ function drawSnake() {
   for(var i=0; i<snake.length; i++) {
     var bgRow = document.querySelector('#bg-row'+snake[i][0]+'_'+snake[i][1]);
     bgRow.classList.add("snake");
-    if(bgRow.classList.contains('apple')) {
-      score++;
-      initApple();
-      state = 'eat';
+    if(bgRow.classList.contains('apple')) { //apple먹을 때
+      score++; //점수 추가
+      initApple(); //apple 초기화
+      state = 'eat'; //state반영 
     }
   }
   return state;
@@ -217,7 +217,7 @@ function move() {
 }
 
 function start() {
-  gameInterval = setInterval(move, 1000);
+  gameInterval = setInterval(move, 700);
 }
 
 function end() {
