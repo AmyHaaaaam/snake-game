@@ -92,15 +92,18 @@ function initSnake() {
 // draw snake
 function drawSnake() {
   state = '';
-  // 움직일 때 기존 스네이크 픽셀 지우기 위한 소스
+  // 기존 스네이크 픽셀 지우기 위한 소스
   var block = document.querySelectorAll('.snake');
-  if(block.length > 0) {
-    block[0].classList.remove("snake");
+  for (var i = 0; i <block.length; i++) {
+    block[i].classList.remove("snake");
   }
+  //$('span').removeClass('snake');
 
   for(var i=0; i<snake.length; i++) {
+    //console.log(snake + '/' + snake.length);
     var bgRow = document.querySelector('#bg-row'+snake[i][0]+'_'+snake[i][1]);
     bgRow.classList.add("snake");
+    
     if(bgRow.classList.contains('apple')) { //apple먹을 때
       score++; //점수 추가
       initApple(); //apple 초기화
@@ -189,7 +192,7 @@ function move() {
   if(x >= 0 && x < mapSize) {
       head[0] = x;
   }else {
-      alert('벽입니다.');
+      alert('띠용');
       end();
       initAll();
       return;
@@ -200,7 +203,7 @@ function move() {
   if(y >= 0 && y < mapSize) {
     head[1] = y;
   } else {
-    alert('벽입니다.');
+    alert('띠용');
     end();
     initAll();
     return;
@@ -210,14 +213,16 @@ function move() {
     //initApple();
     //snake.push([x, y]);
     drawSnake();
+    //console.log(snake + '/' + snake.length + '/' + state);
   } else {
     snake.pop();
     drawSnake();
+    //console.log(snake + '/' + snake.length + '/' + state);
   }
 }
 
 function start() {
-  gameInterval = setInterval(move, 700);
+  gameInterval = setInterval(move, 150);
 }
 
 function end() {
