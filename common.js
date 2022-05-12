@@ -7,9 +7,8 @@ document.addEventListener("DOMContentLoaded", function(){
   window.onresize = function() {
     contentHeightSet();
   };
-  document.querySelector('.btn-play').addEventListener('click', start);
+
   document.addEventListener('keydown', keyDownHandler, false);
-  
 });
 //-----------------------------------------------------------------------------------------
 //헤더 푸터가 위 아래에 붙어 있도록 하는 코드
@@ -74,6 +73,8 @@ function initAll() {
   leftPressed = false;
   downPressed = false;
   upPressed = false;
+
+  document.querySelector('.btn-play').addEventListener('click', start);
 }
 //-----------------------------------------------------------------------------------------
 // 맵 동적으로 생성
@@ -325,6 +326,7 @@ function move() {
 function start() {
   gameInterval = setInterval(move, speed);
   document.addEventListener('touchstart', touchStart, false);
+  document.querySelector('.btn-play').removeEventListener('click', start);
 }
 function end() {
   clearInterval(gameInterval);
