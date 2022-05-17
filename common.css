@@ -92,11 +92,11 @@ body{position:relative;font-family:'Noto Sans KR', 'NotoSansCJKsc', sans-serif;f
 @media screen and (max-width: 768px) {
   /* layout */
   html{font-size:14px;}
-  body{height:calc(var(--vh, 1vh)*100);overflow-y:hidden;}
+  .wrap{height:calc(var(--vh, 1vh)*100);overflow-y:hidden;}
   .header-wrap{padding:20px 10px;}
   .header-wrap .score{font-size:25px;}
   .header-wrap p{display:block;font-size:12px;line-height:16px;text-align:center;}
-  .container{height:calc(100% - 242px);}
+  .container{height:calc(var(--vh, 1vh)*100 - 242px);}
   .footer-wrap{padding:10px;}
 
   /* game background */
