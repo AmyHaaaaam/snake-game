@@ -8,9 +8,20 @@ document.addEventListener("DOMContentLoaded", function(){
     contentHeightSet();
   };
   setScreenSize();
+  window.addEventListener('resize', () => setScreenSize());
   function setScreenSize() {//모바일에서 탑과 바텀바로 인해 100vh가 적용되지 않는 현상 해결
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  disableScroll();
+  function disableScroll() { //모바일에서 스크롤 이벤트 삭제
+    document.querySelector('body').addEventListener('touchmove', this.removeEvent, { passive: false });
+    document.querySelector('body').addEventListener('onclick', this.removeEvent, { passive: false });
+    document.querySelector('body').addEventListener('mousewheel', this.removeEvent, { passive: false });
+  }
+  removeEvent = e => {
+    e.preventDefault();
+    e.stopPropagation();
   }
 });
 //-----------------------------------------------------------------------------------------
