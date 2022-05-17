@@ -7,6 +7,11 @@ document.addEventListener("DOMContentLoaded", function(){
   window.onresize = function() {
     contentHeightSet();
   };
+  setScreenSize();
+  function setScreenSize() {//모바일에서 탑과 바텀바로 인해 100vh가 적용되지 않는 현상 해결
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
 });
 //-----------------------------------------------------------------------------------------
 //헤더 푸터가 위 아래에 붙어 있도록 하는 코드
