@@ -7,15 +7,13 @@ document.addEventListener("DOMContentLoaded", function(){
   window.onresize = function() {
     contentHeightSet();
   };
-
-  document.addEventListener('keydown', keyDownHandler, false);
 });
 //-----------------------------------------------------------------------------------------
 //헤더 푸터가 위 아래에 붙어 있도록 하는 코드
 //----------------------------------------------------------------------------------------- 
 function contentHeightSet() {
 	var windowH = window.innerHeight;
-  var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.footer-wrap').offsetHeight + document.querySelector('.controller').offsetHeight;
+  var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.controller').offsetHeight;
   var gameBoxH = document.querySelector('.game').offsetHeight;
   var wrap = document.querySelector('.wrap');
 
@@ -33,23 +31,31 @@ function contentHeightSet() {
 //-----------------------------------------------------------------------------------------
 var score = 0; //스코어
 var state = '';
-var speed = 250; //최초스피드
+var speed = 280; //최초스피드
 var LR = 0; // 좌우 방향
 var TB = 1; // 위아래 방향
-var scoreText = document.getElementsByClassName('score')[0];
+var scoreText = document.getElementsByClassName('score')[0]; //스코어텍스트
+var eatSound = document.querySelector('.eat'); //사과먹는 사운드
+var gameOverSound = document.querySelector('.gameover'); //게임오버 사운드
 
-var rightPressed = false;
+//클릭, 터치 이벤트 상태
+var rightPressed = false; 
 var leftPressed = false;
 var upPressed = false;
 var downPressed = false;
 
-var mapSize = 17; 
+var mapSize = 17; //맵 크기
 
-var gameInterval;
+var gameInterval; //자동재생
 
-var snake = new Array();
-var prevSnake = new Array();
-var apple = new Array();
+var snake = new Array(); //뱀 변수
+var prevSnake = new Array(); //이전 뱀 변수
+var apple = new Array(); //사과 변수
+
+var startX; //터치이벤트 x좌표 시작
+var startY; //터치이벤트 y좌표 시작
+var endX; //터치이벤트 x좌표 끝
+var endY; //터치이벤트 y좌표 끝
 
 // 난수 생성 함수 
 function generateRandom (min, max) {
@@ -61,8 +67,9 @@ function generateRandom (min, max) {
 //----------------------------------------------------------------------------------------- 
 function initAll() {
   score = 0; // 점수 초기화
-  speed = 200; // 속도 초기화
-  scoreText.innerText="SCORE : 0"; //점수초기화
+  speed = 290; // 속도 초기화
+  scoreText.innerText="SNAKE GAME"; //점수에서 스네이크 게임 헤드명으로 변경
+
   initMap(); // 맵 초기화
   initSnake(); // init snake
   initApple(); // init apple
@@ -74,6 +81,7 @@ function initAll() {
   downPressed = false;
   upPressed = false;
 
+  document.querySelector('.wrap').classList.remove('end');
   document.querySelector('.btn-play').addEventListener('click', start);
 }
 //-----------------------------------------------------------------------------------------
@@ -123,15 +131,19 @@ function drawSnake() {
   for(var i=0; i<snake.length; i++) {
     var bgRow = document.querySelector('#bg-row'+snake[i][0]+'_'+snake[i][1]);
     if(bgRow.classList.contains('snake')) { //몸에 부딪힐 때
+      gameOverSound.currentTime = 0;
+      gameOverSound.play();
+      document.querySelector('.wrap').classList.add('end');
+      document.querySelector('.restart').addEventListener('click', initAll);
       end();
-      alert('몸에 부딪혔다!');
-      initAll();
     }
     bgRow.classList.add("snake");
     
     if(bgRow.classList.contains('apple')) { //apple먹을 때
       score++; //점수 추가
-      speed = speed - score*2; //속도 증가
+      eatSound.currentTime = 0;
+      eatSound.play();
+      speed = speed - score; //속도 증가
       end(); //인터벌 클리어
       start(); //재시작
       initApple(); //apple 초기화
@@ -155,10 +167,6 @@ function initApple() {
   x = generateRandom(0,mapSize-1); //난수생성 
   y = generateRandom(0,mapSize-1);
 
-  /*if (x == snakeP[0] && y == snakeP[1]) { //현재 스네이크의 위치와 같다면
-    x = generateRandom(0,mapSize-1); //난수생성 
-    y = generateRandom(0,mapSize-1);
-  } */
   apple = [];
   apple.push([x, y]);
   drawApple();
@@ -190,43 +198,23 @@ function keyDownHandler(event) {
   switch (event.keyCode){
     case 39: //right
       if(leftPressed == false){ 
-        rightPressed = true; 
-        LR = 1;
-        TB = 0;
-        move();
+        right();
       }
-      downPressed = false;
-      upPressed = false;
       break;
     case 37: //left
       if(rightPressed == false){
-        leftPressed = true;
-        LR = -1;
-        TB = 0;
-        move();
+        left();
       }
-      downPressed = false;
-      upPressed = false; 
       break;
     case 40: //down
      if(upPressed == false){
-        downPressed = true;
-        LR = 0;
-        TB = 1;
-        move();
+        down();
       }
-      rightPressed = false;
-      leftPressed = false;
       break;
     case 38: //up
       if(downPressed == false){
-        upPressed = true;
-        LR = 0;
-        TB = -1;
-        move();
+        up();
       }
-      rightPressed = false;
-      leftPressed = false;
       break;
   }
 }
@@ -234,16 +222,17 @@ function keyDownHandler(event) {
 // 터치 이벤트
 //----------------------------------------------------------------------------------------- 
 function touchStart(e) {
-  var moveX = e.changedTouches[0].clientX;
-  var moveY = e.changedTouches[0].clientY;
-
-  var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.footer-wrap').offsetHeight;
+  startX = e.changedTouches[0].clientX;
+  startY = e.changedTouches[0].clientY; 
+  /*var restH = document.querySelector('.header-wrap').offsetHeight + document.querySelector('.footer-wrap').offsetHeight;
   var windowWidth = window.innerWidth;
   var windowHeight = window.innerHeight - restH;
-
+  console.log('startX' + startX );
+  console.log('startY' + startY );
+ 
   if(
-    moveX > windowWidth*2/3 
-    && windowHeight/3 < moveY < windowHeight*2/3 
+    startX > windowWidth*2/3 
+    && windowHeight/3 < startY < windowHeight*2/3 
     && leftPressed == false
     ) { //right
       rightPressed = true; 
@@ -253,8 +242,8 @@ function touchStart(e) {
       downPressed = false;
       upPressed = false;
   } else if(
-    moveX < windowWidth/3 
-    && windowHeight/3 < moveY < windowHeight*2/3 
+    startX < windowWidth/3 
+    && windowHeight/3 < startY < windowHeight*2/3 
     && rightPressed == false
     ) { //left
       leftPressed = true;
@@ -264,8 +253,8 @@ function touchStart(e) {
       downPressed = false;
       upPressed = false;
   } else if (
-    moveY > windowHeight*2/3 
-    && windowWidth/3 < moveX < windowWidth*2/3 
+    startY > windowHeight*2/3 
+    && windowWidth/3 < startX < windowWidth*2/3 
     && upPressed == false
     ) { //down
       downPressed = true;
@@ -275,8 +264,8 @@ function touchStart(e) {
       rightPressed = false;
       leftPressed = false;
   } else if (
-    moveY < windowHeight/3 + 90 //스코어 영역만큼 범위 추가
-    && windowWidth/3 < moveX < windowWidth*2/3 
+    startY < windowHeight/3 + 90 //스코어 영역만큼 범위 추가
+    && windowWidth/3 < startX < windowWidth*2/3 
     && downPressed == false) { //up
       upPressed = true;
       LR = 0;
@@ -284,7 +273,56 @@ function touchStart(e) {
       move();
       rightPressed = false;
       leftPressed = false;
+  }*/
+}
+function touchEnd(e) {
+  endX = e.changedTouches[0].clientX - startX;
+  endY = e.changedTouches[0].clientY - startY;
+
+  if(endX > 0 && endX > endY && leftPressed == false) {//right
+    right();
+  } else if(endX < 0 && endX < endY && rightPressed == false){ //left
+    left();
+  } else if(endY > 0 && endY > endX && upPressed == false) { //down
+    down();
+  } else if(endY < 0 && endY < endX && downPressed == false) {
+    up();
   }
+}
+//-----------------------------------------------------------------------------------------
+// 방향
+//-----------------------------------------------------------------------------------------
+function right() {
+  rightPressed = true; 
+  LR = 1;
+  TB = 0;
+  move();
+  downPressed = false;
+  upPressed = false;
+}
+function left() {
+  leftPressed = true;
+  LR = -1;
+  TB = 0;
+  move();
+  downPressed = false;
+  upPressed = false;
+}
+function down() {
+  downPressed = true;
+  LR = 0;
+  TB = 1;
+  move();
+  rightPressed = false;
+  leftPressed = false;
+}
+function up() {
+  upPressed = true;
+  LR = 0;
+  TB = -1;
+  move();
+  rightPressed = false;
+  leftPressed = false;
 }
 //-----------------------------------------------------------------------------------------
 // 움직이기
@@ -298,9 +336,11 @@ function move() {
   if(x >= 0 && x < mapSize) {
       head[0] = x;
   }else {
-      alert('띠용');
+      gameOverSound.currentTime = 0;
+      gameOverSound.play();
+      document.querySelector('.wrap').classList.add('end');
       end();
-      initAll();
+      document.querySelector('.restart').addEventListener('click', initAll);
       return;
   }
 
@@ -309,9 +349,11 @@ function move() {
   if(y >= 0 && y < mapSize) {
     head[1] = y;
   } else {
-    alert('띠용');
+    gameOverSound.currentTime = 0;
+    gameOverSound.play();
+    document.querySelector('.wrap').classList.add('end');
     end();
-    initAll();
+    document.querySelector('.restart').addEventListener('click', initAll);
     return;
   }
   snake.unshift(head);
@@ -325,9 +367,15 @@ function move() {
 //----------------------------------------------------------------------------------------- 
 function start() {
   gameInterval = setInterval(move, speed);
-  document.addEventListener('touchstart', touchStart, false);
-  document.querySelector('.btn-play').removeEventListener('click', start);
+  scoreText.innerText="SCORE : 0"; //점수초기화
+  document.addEventListener('keydown', keyDownHandler, false); //클릭이벤트
+  document.addEventListener('touchstart', touchStart, false); //터치시작이벤트
+  document.addEventListener('touchend', touchEnd, false); //터치종료이벤트
+  document.querySelector('.btn-play').removeEventListener('click', start); //시작버튼
 }
 function end() {
   clearInterval(gameInterval);
+  document.removeEventListener('keydown', keyDownHandler, false); //클릭이벤트
+  document.removeEventListener('touchstart', touchStart, false); //터치시작이벤트
+  document.removeEventListener('touchend', touchEnd, false); //터치종료이벤트
 }
