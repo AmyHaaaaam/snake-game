@@ -92,7 +92,8 @@ body{position:relative;font-family:'Noto Sans KR', 'NotoSansCJKsc', sans-serif;f
 @media screen and (max-width: 768px) {
   /* layout */
   html{font-size:14px;}
-  .wrap{height:calc(var(--vh, 1vh)*100);overflow-y:hidden;}
+  body{overflow-y:hidden;}
+  .wrap{height:calc(var(--vh, 1vh)*100);overflow:hidden;}
   .header-wrap{padding:20px 10px;}
   .header-wrap .score{font-size:25px;}
   .header-wrap p{display:block;font-size:12px;line-height:16px;text-align:center;}
