@@ -16,8 +16,6 @@ document.addEventListener("DOMContentLoaded", function(){
   disableScroll();
   function disableScroll() { //모바일에서 스크롤 이벤트 삭제
     document.querySelector('body').addEventListener('touchmove', this.removeEvent, { passive: false });
-    document.querySelector('body').addEventListener('onclick', this.removeEvent, { passive: false });
-    document.querySelector('body').addEventListener('mousewheel', this.removeEvent, { passive: false });
   }
   removeEvent = e => {
     e.preventDefault();
